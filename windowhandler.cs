@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Diagnostics;
 
 public class GrasshopperWindowHandler(){
     IntPtr GetGHWIndowHandle(GH_Document gh){
