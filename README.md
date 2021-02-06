@@ -134,7 +134,7 @@ static async void DisableAllComponents(int h, int d){
     ClickOnPoint((IntPtr) h, new POINT(20, 250), MOUSETYPE.MOUSECLICK, true);
     await Task.Delay(d);
 
-    for(int i = 0; i < 5; i++){
+    for(int i = 0; i < 4; i++){
         SendKey(ScanCodeShort.DOWN);
         await Task.Delay(d);
     }
