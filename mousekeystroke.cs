@@ -3,6 +3,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 class MouseKeyOperation{
+    
     [StructLayout(LayoutKind.Sequential)]
   public struct POINT
   {
@@ -57,12 +58,10 @@ class MouseKeyOperation{
         break;
       case MOUSETYPE.MOUSECLICK:
         SendMouse(edown);
-        await Task.Delay(100);
         SendMouse(eup);
         if(dblclick){
           await Task.Delay(100);
           SendMouse(edown);
-          await Task.Delay(100);
           SendMouse(eup);
         }
         break;
