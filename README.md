@@ -135,7 +135,7 @@ static async void DisableAllComponents(int h, int d){
     await Task.Delay(d);
 
     for(int i = 0; i < 4; i++){
-        SendKey(ScanCodeShort.DOWN);
+        SendKey(ScanCodeShort.TAB);
         await Task.Delay(d);
     }
 
