@@ -2,7 +2,7 @@
 
 ## 環境
 
-= Windows OS
+- Windows OS
 - Rhinoceros + Grasshopper (Windows Version)
 
 ## 基本の流れ
