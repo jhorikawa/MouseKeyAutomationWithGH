@@ -150,7 +150,7 @@ static async void DisableAllComponents(int h, int d){
 static async void SaveImage(int h, string f, int d){
     var p = new POINT(20, 20);
 
-    ClickOnPoint((IntPtr) h, p, MOUSETYPE.MOUSECLICK, false, true);
+    ClickOnPoint((IntPtr) h, p, MOUSETYPE.MOUSECLICK, false, false);
     await Task.Delay(d);
 
     p.y = 225;
