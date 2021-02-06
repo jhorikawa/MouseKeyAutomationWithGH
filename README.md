@@ -2,8 +2,18 @@
 
 ## 環境
 
-- Windows OS
+= Windows OS
 - Rhinoceros + Grasshopper (Windows Version)
+
+## このハンズオンの目的
+
+Windowsのプログラムで手軽にオートメーションできるようになるのが目的です。基本的にプログラムの自動化を行う場合、利用しているプログラムのSDKを利用して用意されている関数を利用することが主流かと思います。例えばRhinoの場合はRhinoCommonSDKを利用して自動化のプログラムを書くことができます。
+
+ただ、そのプログラムのSDKに関してあまり知識がない状態だと学習コストはそれなりにかかります。マウスやキーボードでやっている作業をくり返すだけでいいんだけど、、、そんな場面を想定しているのが今回のハンズオンです。マウスやキーボードのキーストロークを簡単なプログラムで再現してしまおうというのが今回の目的です。
+
+これを使うことで、UIとして用意されている機能にSDKの知識なくアクセスできるようになり、あたかも人間の手の動きを再現するような形で自動化のプログラムを作れるようになります。特にSDKが公開されていないようなプログラムでは大きな威力を発揮するでしょう。
+
+とはいえ、もしSDKが公開されているなら、そちらをまず使ってみることをおすすめします。UI上には現れない便利なオプションも提供しいていることが多いですし、マウスやキーを使ったUI操作はプログラムアップデート時にUIが変更されて使えなくなる危険性もあったり、あまり安定したオートメーションとはいえないです。
 
 ## 基本の流れ
 
@@ -65,7 +75,7 @@ async void SampleClick(){
 }
 ```
 
-関数を定義しているvoidの前にasyncをつけます。そのうえで間を置きたいところでawait Task.Delay()を使います。()の中にはミリセカンドで間を置きたい時間を整数で入力します。1000ミリセカンドで１秒です。
+関数を定義しているvoidの前にasyncをつけます。そのうえで間を置きたいところでawait Task.Delay()を使います。()の中にはミリセカンドで間を置きたい時間を整数で入力します。1000ミリセカンドで１秒です。個人的に色々試した結果、異なるキーストロークやマウスクリックの間には最低200ミリセカンド程間があったほうが良いようです（少なくともGHでは）。
 
 ## Windowのハンドラー？
 
@@ -98,30 +108,66 @@ WindowInformation wi = windowListExtended.Find( w => w.Caption.StartsWith((strin
 
 ## 利用例
 
+- ウィンドウを最小化し、スクリーン左上に移動する。
+```csharp
+static async void MoveAndHideWindow(int h, int d){
+    ClickOnPoint((IntPtr) h, new POINT(20, -20), MOUSETYPE.MOUSECLICK, false, true);
+
+    await Task.Delay(d);
+
+    ClickOnPoint((IntPtr) h, new POINT(20, -20), MOUSETYPE.MOUSEDOWN, false, false);
+
+    await Task.Delay(d);
+
+    ClickOnPoint(IntPtr.Zero, new POINT(20, 20), MOUSETYPE.MOUSEUP, false, false);
+
+}
+```
+
+- すべてのコンポーネントをDisableにする。
+```csharp
+static async void DisableAllComponents(int h, int d){
+    SendKey(new ScanCodeShort[]{ScanCodeShort.CONTROL, ScanCodeShort.KEY_A});
+
+    await Task.Delay(d);
+
+    ClickOnPoint((IntPtr) h, new POINT(20, 250), MOUSETYPE.MOUSECLICK, true);
+    await Task.Delay(d);
+
+    for(int i = 0; i < 5; i++){
+        SendKey(ScanCodeShort.DOWN);
+        await Task.Delay(d);
+    }
+
+
+    SendKey(ScanCodeShort.RETURN);
+}
+```
+
 - メニュー項目にあるExport Hi-Res Imageを自動で呼び出し、指定のファイル名で高解像度画面キャプチャを書き出したい。
 
 ```csharp
-static async void SaveImage(int h, string f){
+static async void SaveImage(int h, string f, int d){
     var p = new POINT(20, 20);
 
     ClickOnPoint((IntPtr) h, p, MOUSETYPE.MOUSECLICK, false, true);
-    await Task.Delay(400);
+    await Task.Delay(d);
 
     p.y = 225;
     ClickOnPoint((IntPtr) h, p, MOUSETYPE.MOUSECLICK);
-    await Task.Delay(400);
+    await Task.Delay(d);
 
     SendKey(ScanCodeShort.TAB);
-    await Task.Delay(400);
+    await Task.Delay(d);
     SendKey(ScanCodeShort.TAB);
-    await Task.Delay(400);
+    await Task.Delay(d);
 
     SendKey(f);
-    await Task.Delay(400);
+    await Task.Delay(d);
 
     for(int i = 0; i < 5; i++){
         SendKey(ScanCodeShort.TAB);
-        await Task.Delay(400);
+        await Task.Delay(d);
     }
 
     SendKey(ScanCodeShort.RETURN);
